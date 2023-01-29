@@ -52,10 +52,10 @@ public class ClientController {
     // update client
     @PutMapping("/clients/{id}")
     public Client updateClientById(@PathVariable Long id, @RequestBody Client client) {
-        Optional<Client> clientDB = clientRepository.findById(id);
-        if (clientDB.isEmpty()) {
+        Optional<Client> clientDb = clientRepository.findById(id);
+        if (clientDb.isEmpty()) {
             throw new ResourceNotFoundException("Client not found");
-        } else if (client.getId() != id || clientDB.get().getId() != id) {
+        } else if (client.getId() != id || clientDb.get().getId() != id) {
             throw new BadRequestException("bad client id");
         }
         return clientRepository.save(client);
@@ -63,7 +63,7 @@ public class ClientController {
 
 
     // delete a client by id
-    @DeleteMapping("clients/{id}")
+    @DeleteMapping("/clients/{id}")
     public void deleteClientById(@PathVariable Long id) {
         clientRepository.deleteById(id);
     }
