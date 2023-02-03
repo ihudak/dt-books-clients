@@ -36,7 +36,9 @@ public class ClientController extends HardworkingController {
     public Client getClientById(@PathVariable Long id) {
         Optional<Client> client = clientRepository.findById(id);
         if (client.isEmpty()) {
-            throw new ResourceNotFoundException("Client not found");
+            ResourceNotFoundException ex = new ResourceNotFoundException("Client not found");
+            logger.error(ex.getMessage());
+            throw ex;
         }
         return client.get();
     }
@@ -47,7 +49,9 @@ public class ClientController extends HardworkingController {
         simulateCrash();
         Client clientDb = clientRepository.findByEmail(email);
         if (clientDb == null) {
-            throw new ResourceNotFoundException("Client does not exist. Email: " + email);
+            ResourceNotFoundException ex = new ResourceNotFoundException("Client does not exist. Email: " + email);
+            logger.error(ex.getMessage());
+            throw ex;
         }
         return clientDb;
     }
@@ -66,9 +70,13 @@ public class ClientController extends HardworkingController {
     public Client updateClientById(@PathVariable Long id, @RequestBody Client client) {
         Optional<Client> clientDb = clientRepository.findById(id);
         if (clientDb.isEmpty()) {
-            throw new ResourceNotFoundException("Client not found");
+            ResourceNotFoundException ex = new ResourceNotFoundException("Client not found");
+            logger.error(ex.getMessage());
+            throw ex;
         } else if (client.getId() != id || clientDb.get().getId() != id) {
-            throw new BadRequestException("bad client id");
+            BadRequestException ex = new BadRequestException("bad client id");
+            logger.error(ex.getMessage());
+            throw ex;
         }
         return clientRepository.save(client);
     }
