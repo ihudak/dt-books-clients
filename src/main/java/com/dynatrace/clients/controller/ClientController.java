@@ -46,7 +46,9 @@ public class ClientController extends HardworkingController {
     // find a client by email
     @GetMapping("/find")
     public Client getClientByEmail(@RequestParam String email) {
+        simulateHardWork();
         simulateCrash();
+        logger.info("Looking for client " + email);
         Client clientDb = clientRepository.findByEmail(email);
         if (clientDb == null) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Client does not exist. Email: " + email);
