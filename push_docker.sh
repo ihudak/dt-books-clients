@@ -8,6 +8,7 @@ display_usage() {
       echo;
       echo "Please supply at least either -agents or -noagent";
       echo "      optionally specify platform as -arm or -x86";
+	  echo;
       exit 1;
 }
 
