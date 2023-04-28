@@ -1,4 +1,9 @@
 #!/bin/sh
+######## Project Configuration ##########
+PROJECT=dt-clients
+BASE_REPO=ivangudak096
+TAG=latest
+######## Project Configuration ##########
 
 display_usage() {
   echo "Bad/no argument(s) supplied";
@@ -18,19 +23,29 @@ elif [ $1 != "-agents" ] && [ $1 != "-noagent" ]; then
   display_usage;
 fi
 
-if [ $# -eq 2 ] && [ $2 = "-arm" ]; then PLATFORM="arm64"; else PLATFORM="latest"; fi
-
-BASE_REPO=ivangudak096
-
-if [ $1 = "-agents" ]; then
-  BASE_IMAGE=dt-java-agents
+if [ $# -eq 2 ] && [ $2 = "-arm" ]; then
+  PLATFORM="arm64";
+  PLATFORM_FULL="arm64/v8";
 else
-  BASE_IMAGE=dt-java-noagent
+  PLATFORM="x64";
+  PLATFORM_FULL="amd64";
 fi
 
-./gradlew clean build
-docker image build --platform linux/$PLATFORM -t ivangudak096/dt-clients-service:$PLATFORM --build-arg BASE_REPO=$BASE_REPO --build-arg BASE_IMAGE=$BASE_IMAGE --build-arg BASE_IMG_TAG=$PLATFORM .
-docker push ivangudak096/dt-clients-service:$PLATFORM
+if [ $1 = "-agents" ]; then
+  AGENT=agents
+else
+  AGENT=noagent
+fi
 
-#docker image build --platform linux/arm64 -t ivangudak096/dt-clients-service:arm64 .
-#docker push ivangudak096/dt-clients-service:arm64
+IMG_NAME=$BASE_REPO/$PROJECT-$AGENT-$PLATFORM:$TAG
+
+./gradlew clean build
+docker image build \
+  --platform linux/$PLATFORM_FULL \
+  -t $IMG_NAME \
+  --build-arg BASE_REPO=$BASE_REPO \
+  --build-arg AGENT=$AGENT \
+  --build-arg PLATFORM=$PLATFORM \
+  --build-arg BASE_IMG_TAG=$TAG \
+  .
+docker push $IMG_NAME

@@ -2,21 +2,40 @@
 CLS
 ECHO.
 
+REM ######## Project Configuration ##########
+SET PROJECT=dt-clients
+SET BASE_REPO=ivangudak096
+SET TAG=latest
+REM ######## Project Configuration ##########
+
 IF "%~1"=="" GOTO UNKNOWN
 
 IF "%1"=="-noagent" (
-    SET BASE_IMAGE=dt-java-noagent
+    SET AGENT=noagent
 ) ELSE IF "%1"=="-agents"  (
-    SET BASE_IMAGE=dt-java-agents
+    SET AGENT=agents
 ) ELSE GOTO UNKNOWN
 
-IF "%~2"=="-arm" (SET PLATFORM=arm64) ELSE (SET PLATFORM=latest)
+IF "%~2"=="-arm" (
+    SET PLATFORM=arm64
+    SET PLATFORM_FULL=arm64/v8
+) ELSE (
+    SET PLATFORM=x64
+    SET PLATFORM_FULL=amd64
+)
 
-SET BASE_REPO=ivangudak096
+SET IMG_NAME=%BASE_REPO%/%PROJECT%-%AGENT%-%PLATFORM%:%TAG%
 
 call gradlew.bat clean build
-docker image build --platform linux/%PLATFORM% -t %BASE_REPO%/dt-clients-service:%PLATFORM% --build-arg BASE_REPO=%BASE_REPO% --build-arg BASE_IMAGE=%BASE_IMAGE% --build-arg BASE_IMG_TAG=%PLATFORM% .
-docker push ivangudak096/dt-clients-service:%PLATFORM%
+docker image build ^
+    --platform linux/%PLATFORM_FULL% ^
+    -t %IMG_NAME% ^
+    --build-arg BASE_REPO=%BASE_REPO% ^
+    --build-arg AGENT=%AGENT% ^
+    --build-arg PLATFORM=%PLATFORM% ^
+    --build-arg BASE_IMG_TAG=%TAG% ^
+    .
+docker push %IMG_NAME%
 EXIT 0
 
 
