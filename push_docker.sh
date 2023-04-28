@@ -18,7 +18,6 @@ elif [ $1 != "-agents" ] && [ $1 != "-noagent" ]; then
   display_usage;
 fi
 
-
 if [ $# -eq 2 ] && [ $2 = "-arm" ]; then PLATFORM="arm64"; else PLATFORM="latest"; fi
 
 BASE_REPO=ivangudak096
