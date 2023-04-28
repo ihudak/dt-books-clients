@@ -29,7 +29,7 @@ else
 fi
 
 ./gradlew clean build
-docker image build --platform linux/$PLATFORM -t ivangudak096/dt-clients-service:$PLATFORM --build-arg BASE_REPO=$BASE_REPO --build-arg BASE_IMAGE=$BASE_IMAGE --build-arg BASE_IMG_TAG=$PLATFORM.
+docker image build --platform linux/$PLATFORM -t ivangudak096/dt-clients-service:$PLATFORM --build-arg BASE_REPO=$BASE_REPO --build-arg BASE_IMAGE=$BASE_IMAGE --build-arg BASE_IMG_TAG=$PLATFORM .
 docker push ivangudak096/dt-clients-service:$PLATFORM
 
 #docker image build --platform linux/arm64 -t ivangudak096/dt-clients-service:arm64 .
