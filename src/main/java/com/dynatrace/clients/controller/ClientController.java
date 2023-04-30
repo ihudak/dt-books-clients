@@ -91,7 +91,7 @@ public class ClientController extends HardworkingController {
     // delete all clients
     @DeleteMapping("/delete-all")
     public void deleteAllClients() {
-        clientRepository.deleteAll();
+        clientRepository.truncateTable();
     }
 
     @Override
